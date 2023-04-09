@@ -61,7 +61,7 @@ pipeline {
         	branch 'main'
     	}
     	steps {
-	  sh 'sudo docker run -d -p 3000:3000 -expose 3000 nodemain:v1.0'
+	  sh 'sudo docker run -d -p 3000:3000 --expose 3000 nodemain:v1.0'
 	}
     }
   }
