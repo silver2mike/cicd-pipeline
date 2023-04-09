@@ -1,12 +1,12 @@
 //BRANCH PIPELINE
 
 pipeline {
-  agent { label 'aws-new' }
+  agent { label 'ubuntu' }
   options {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')
     disableConcurrentBuilds()
   }
-
+/*
    environment { 
 
         registryCredential  = 'dockerhub_mikedzn' 
@@ -14,67 +14,63 @@ pipeline {
         dockerImage_l       = ''
         registryName        = "mikedzn/epam_${env.BRANCH_NAME}"
    }
-/*
+*/
+  tools {
+	nodejs 'node'
+  }
+
   stages {
-    stage('Insert Build Number') {
+    stage('Build') {
       steps {
-        echo "Some changes for index.html"
-        sh'''
-	        echo "MAIN $BUILD_NUMBER"
-	        sed -i "12 i <p style='text-align:center'>BUILD:$BUILD_NUMBER</p>" index.html
-          branchName=$( echo ${GIT_BRANCH#refs/heads/} )
-          echo ${GIT_BRANCH#refs/heads/}
-          sed -i "13 i <p style='text-align:center'>BRANCH:${branchName}</p>" index.html
-          new_title="ENV - ${branchName}"
-          sed -i 's/<title>.*</<title>'"${new_title}"'</' index.html
-          '''
+//        echo "Some changes for index.html"
+        sh'npm install'
       }
     }
-    stage('HTML test by w3.org validator'){
+    stage('Test'){
       steps {
-        sh'''
-          if curl -H "Content-Type: text/html; charset=utf-8" --data-binary @index.html https://validator.w3.org/nu/?out=json | grep -q error; then
-            exit 1
-          else
-            exit 0
-          fi
-        '''
+        sh'npm test'
       }
     }
-    stage('Install and run Docker') {
+    stage('Install Docker') {
       steps {
+	echo ""
+/*
         sh '''
-            sudo yum install docker -y
-            sudo systemctl start docker
-            sudo usermod -aG docker $USER
-            sudo chmod 666 /var/run/docker.sock
-            sudo systemctl restart docker
 
+		sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+		echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+		sudo apt update -y
+		apt-cache policy docker-ce
+		sudo apt install -y docker-ce
         '''
+*/
       }
-
     }
     stage('Build Docker image') {
-      steps {
-        echo "Build Docker Image"
-        script { 
-          dockerImage = docker.build "${registryName}:$BUILD_NUMBER"
-          dockerImage_l = docker.build "${registryName}:latest" 
-        }
-      }
+    	steps {
+	  sh '''
+		branchName=$( echo ${GIT_BRANCH#refs/heads/} )
+		sudo docker build -t "node${branchName}:v1.0" .
+	  '''
+	}
     }
-    stage('Upload to DockerHub') {
-      steps {
-        echo "Upload to DockerHub"
-        script { 
-          docker.withRegistry( '', registryCredential ) { 
-                dockerImage.push()
-                dockerImage_l.push()
-          }				
-        }
-      slackSend color: "good", message: "CI pipeline successfully finished"
-      }
+
+    stage('Deploy main') {
+	when {
+        	branch 'main'
+    	}
+    	steps {
+	  sh 'sudo docker run -d -p 3000:3000 --expose 3000 nodemain:v1.0'
+	}
+    }
+    stage('Deploy main') {
+	when {
+        	branch 'dev'
+    	}
+    	steps {
+	  sh 'sudo docker run -d --expose 3001 -p 3001:3000 nodedev:v1.0'
+	}
     }
   }
-*/
 }
