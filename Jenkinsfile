@@ -1,7 +1,7 @@
 //BRANCH PIPELINE
 
 pipeline {
-  agent { label 'internal' }
+  agent { label 'aws-new' }
   options {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')
     disableConcurrentBuilds()
