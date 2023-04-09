@@ -34,7 +34,7 @@ pipeline {
     	
 	stage('Install Docker') {
       		steps {
-			echo ""
+			echo " "
 /*
         sh '''
 
