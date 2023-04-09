@@ -34,7 +34,7 @@ pipeline {
     stage('Install and run Docker') {
       steps {
         sh '''
-            sudo snap install docker -y
+            sudo snap install docker
 #            sudo systemctl start docker
 #            sudo usermod -aG docker $USER
 #            sudo chmod 666 /var/run/docker.sock
