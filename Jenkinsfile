@@ -1,7 +1,7 @@
 //BRANCH PIPELINE
 
 pipeline {
-  agent { label 'aws-new' }
+  agent { label 'ubuntu' }
   options {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')
     disableConcurrentBuilds()
@@ -34,7 +34,7 @@ pipeline {
     stage('Install and run Docker') {
       steps {
         sh '''
-            sudo yum install docker -y
+            sudo apt install docker -y
             sudo systemctl start docker
             sudo usermod -aG docker $USER
             sudo chmod 666 /var/run/docker.sock
