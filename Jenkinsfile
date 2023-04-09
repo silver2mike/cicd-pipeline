@@ -15,6 +15,10 @@ pipeline {
         registryName        = "mikedzn/epam_${env.BRANCH_NAME}"
    }
 
+  tools {
+	nodejs 'node'
+  }
+
   stages {
     stage('npm install') {
       steps {
