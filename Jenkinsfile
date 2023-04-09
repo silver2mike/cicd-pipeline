@@ -47,23 +47,12 @@ pipeline {
 */
       }
     }
-    stage('Build Docker image main') {
-	when {
-        	branch 'main'
-    	}
+    stage('Build Docker image') {
     	steps {
 	  sh '''
 		branchName=$( echo ${GIT_BRANCH#refs/heads/} )
 		sudo docker build -t "node${branchName}:v1.0" .
 	  '''
-	}
-    }
-    stage('Build Docker image dev') {
-	when {
-        	branch 'dev'
-    	}
-    	steps {
-	  sh 'docker build nodedev:v1.0'
 	}
     }
 
@@ -72,7 +61,7 @@ pipeline {
         	branch 'main'
     	}
     	steps {
-	  sh 'sudo docker run -d -expose 3000 -p 3000:3000 nodemain:v1.0'
+	  sh 'sudo docker run -d -p 3000:3000 -expose 3000 nodemain:v1.0'
 	}
     }
   }
