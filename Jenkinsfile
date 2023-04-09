@@ -20,28 +20,30 @@ pipeline {
   }
 
   stages {
-    stage('npm install') {
+    stage('Build') {
       steps {
 //        echo "Some changes for index.html"
         sh'npm install'
       }
     }
-    stage('npm test'){
+    stage('Test'){
       steps {
         sh'npm test'
       }
     }
-    stage('Install and run Docker') {
+    stage('Install Docker') {
       steps {
+/*
         sh '''
+
 		sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 		echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 		sudo apt update -y
 		apt-cache policy docker-ce
 		sudo apt install -y docker-ce
-
         '''
+*/
       }
     }
     stage('Build Docker image main') {
@@ -49,7 +51,10 @@ pipeline {
         	branch 'main'
     	}
     	steps {
-	  sh 'sudo docker build -t "nodemain:v1.0" .'
+	  sh '''
+		branchName=$( echo ${GIT_BRANCH#refs/heads/} )
+		sudo docker build -t "node${branchName}:v1.0" .
+	  '''
 	}
     }
     stage('Build Docker image dev') {
@@ -61,12 +66,12 @@ pipeline {
 	}
     }
 
-    stage('Docker run main') {
+    stage('Deploy main') {
 	when {
         	branch 'main'
     	}
     	steps {
-	  sh 'sudo docker run -d –expose 3000 -p 3000:3000 nodemain:v1.0'
+	  sh 'sudo docker run -d -expose 3000 -p 3000:3000 nodemain:v1.0'
 	}
     }
   }
