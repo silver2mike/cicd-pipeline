@@ -48,7 +48,7 @@ pipeline {
         	branch 'main'
     	}
     	steps {
-	  sh 'sudo docker build -t nodemain:v1.0'
+	  sh 'sudo docker build nodemain:v1.0'
 	}
     }
     stage('Build Docker image dev') {
@@ -56,7 +56,7 @@ pipeline {
         	branch 'dev'
     	}
     	steps {
-	  sh 'docker build -t nodedev:v1.0'
+	  sh 'docker build nodedev:v1.0'
 	}
     }
 /*
