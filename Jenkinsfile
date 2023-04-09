@@ -62,7 +62,6 @@ pipeline {
     }
 
     stage('Docker run main') {
-      steps {
 	when {
         	branch 'main'
     	}
