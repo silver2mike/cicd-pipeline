@@ -39,13 +39,15 @@ pipeline {
         '''
       }
     }
-    stage('Build Docker image') {
+    stage('Build Docker image main') {
 	when {
         	branch 'main'
     	}
     	steps {
 	  sh 'docker build -t nodemain:v1.0 for main'
 	}
+    }
+    stage('Build Docker image dev') {
 	when {
         	branch 'dev'
     	}
