@@ -33,6 +33,7 @@ pipeline {
     }
     stage('Install Docker') {
       steps {
+	echo ""
 /*
         sh '''
 
