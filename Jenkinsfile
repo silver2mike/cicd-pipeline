@@ -34,11 +34,11 @@ pipeline {
     stage('Install and run Docker') {
       steps {
         sh '''
-            sudo apt install docker -y
-            sudo systemctl start docker
-            sudo usermod -aG docker $USER
-            sudo chmod 666 /var/run/docker.sock
-            sudo systemctl restart docker
+            sudo snap install docker -y
+#            sudo systemctl start docker
+#            sudo usermod -aG docker $USER
+#            sudo chmod 666 /var/run/docker.sock
+#            sudo systemctl restart docker
 
         '''
       }
@@ -48,7 +48,7 @@ pipeline {
         	branch 'main'
     	}
     	steps {
-	  sh 'docker build -t nodemain:v1.0 for main'
+	  sh 'sudo docker build -t nodemain:v1.0 for main'
 	}
     }
     stage('Build Docker image dev') {
