@@ -1,7 +1,7 @@
 //BRANCH PIPELINE
 
 pipeline {
-  agent { label 'aws-new' }
+  agent { label 'internal' }
   options {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')
     disableConcurrentBuilds()
@@ -40,10 +40,18 @@ pipeline {
       }
     }
     stage('Build Docker image') {
-      steps {
-        echo "Build Docker Image"
+	when {
+        	branch 'main'
+    	}
+    	steps {
 	  sh 'docker build -t nodemain:v1.0 for main'
-      }
+	}
+	when {
+        	branch 'dev'
+    	}
+    	steps {
+	  sh 'docker build -t nodedev:v1.0 for main'
+	}
     }
 /*
     stage('Upload to DockerHub') {
