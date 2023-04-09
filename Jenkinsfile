@@ -40,11 +40,6 @@ pipeline {
 		sudo apt update -y
 		apt-cache policy docker-ce
 		sudo apt install -y docker-ce
-#            sudo snap install docker
-#            sudo systemctl start docker
-#            sudo usermod -aG docker $USER
-#            sudo chmod 666 /var/run/docker.sock
-#            sudo systemctl restart docker
 
         '''
       }
@@ -65,19 +60,15 @@ pipeline {
 	  sh 'docker build nodedev:v1.0'
 	}
     }
-/*
-    stage('Upload to DockerHub') {
+
+    stage('Docker run main') {
       steps {
-        echo "Upload to DockerHub"
-        script { 
-          docker.withRegistry( '', registryCredential ) { 
-                dockerImage.push()
-                dockerImage_l.push()
-          }				
-        }
-      slackSend color: "good", message: "CI pipeline successfully finished"
-      }
+	when {
+        	branch 'main'
+    	}
+    	steps {
+	  sh 'sudo docker run -d –expose 3000 -p 3000:3000 nodemain:v1.0'
+	}
     }
-*/
   }
 }
