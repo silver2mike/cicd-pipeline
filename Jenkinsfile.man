@@ -19,7 +19,7 @@ pipeline {
 					if [[ -n $(docker ps -aq --filter ancestor=nodemain:${TAG}) ]]; then
 						docker ps -aq --filter ancestor=nodemain:${TAG} | xargs docker rm -f
 					fi
-					docker run -d -p 3000:3000 --expose 3000 nodemain:${TAG}
+					docker run -d  --expose 3000 -p 3000:3000 nodemain:${TAG}
 	  			'''
 			}
      		}
