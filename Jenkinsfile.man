@@ -31,7 +31,7 @@ pipeline {
         		}
 			steps {
 				sh '''
-					if [[ -n $(docker ps -aq --filter ancestor=nodedev:v1.0)" ]]; then
+					if [[ -n $(docker ps -aq --filter ancestor=nodedev:v1.0) ]]; then
 						docker ps -aq --filter ancestor=nodedev:${TAG} | xargs docker rm -f
 					fi
 					docker run -d --expose 3001 -p 3001:3000 nodedev:${TAG}
