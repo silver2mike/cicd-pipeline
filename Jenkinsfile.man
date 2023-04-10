@@ -16,10 +16,10 @@ pipeline {
 
     			steps {
                 		sh '''
-					if [[ -n $(docker ps -aq --filter ancestor=nodemain:$params.TAG) ]]; then
-						docker ps -aq --filter ancestor=nodemain:$params.TAG | xargs docker rm -f
+					if [[ -n $(docker ps -aq --filter ancestor=nodemain:${TAG}) ]]; then
+						docker ps -aq --filter ancestor=nodemain:${TAG} | xargs docker rm -f
 					fi
-					docker run -d -p 3000:3000 --expose 3000 nodemain:$params.TAG
+					docker run -d -p 3000:3000 --expose 3000 nodemain:${TAG}
 	  			'''
 			}
      		}
@@ -31,10 +31,10 @@ pipeline {
         		}
 			steps {
 				sh '''
-					if [[ -n $(docker ps -aq --filter ancestor=nodedev:$params.TAG) ]]; then
-						docker ps -aq --filter ancestor=nodedev:$params.TAG | xargs docker rm -f
+					if [[ -n $(docker ps -aq --filter ancestor=nodedev:${TAG}) ]]; then
+						docker ps -aq --filter ancestor=nodedev:${TAG} | xargs docker rm -f
 					fi
-					docker run -d --expose 3001 -p 3001:3000 nodedev:$params.TAG
+					docker run -d --expose 3001 -p 3001:3000 nodedev:${TAG}
 				'''
    			}
 		}
