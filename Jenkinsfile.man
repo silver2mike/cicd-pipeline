@@ -1,0 +1,39 @@
+
+pipeline {
+	agent {label 'ubuntu-runner'}
+	parameters {
+		choice choices: ['main', 'dev'], name: "CHOICE"
+		choice(name: "CHOICE", choices: ["main", "dev"], description: "Branch")
+		string(name: "TAG", defaultValue: "v1.0", trim: false, description: "Docker image tag")
+  	}
+
+  	stages {
+		stage('Main Deploy') {
+			when {
+       	    			expression { 
+       		 			return params.CHOICE == 'main'
+				}
+        		}	
+
+    			steps {
+                		sh '''
+					docker ps -aq --filter ancestor=nodemain:v1.0 | xargs docker rm -f
+					docker run -d -p 3000:3000 --expose 3000 nodemain:v1.0
+	  			'''
+			}
+     		}
+		stage('Dev Deploy') {
+			when {
+       	    			expression { 
+       		 			return params.CHOICE == 'dev'
+				}
+        		}
+			steps {
+				sh '''
+					docker ps -aq --filter ancestor=nodedev:v1.0 | xargs docker rm -f
+					docker run -d --expose 3001 -p 3001:3000 nodedev:v1.0'
+				'''
+   			}
+		}
+	}
+}		
