@@ -51,6 +51,7 @@ pipeline {
 	  		sh '''
 				docker ps -aq --filter ancestor=nodedev:v1.0 | xargs docker rm -f
 				docker run -d --expose 3001 -p 3001:3000 nodedev:v1.0'
+			'''
 		}
     	}
   }
