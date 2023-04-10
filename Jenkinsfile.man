@@ -2,7 +2,6 @@
 pipeline {
 	agent {label 'ubuntu-runner'}
 	parameters {
-		choice choices: ['main', 'dev'], name: "CHOICE"
 		choice(name: "CHOICE", choices: ["main", "dev"], description: "Branch")
 		string(name: "TAG", defaultValue: "v1.0", trim: false, description: "Docker image tag")
   	}
