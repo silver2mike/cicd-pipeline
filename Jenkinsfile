@@ -38,7 +38,9 @@ pipeline {
     		}
     		steps {
 	  		sh '''
-				docker ps -aq --filter ancestor=nodemain:v1.0 | xargs docker rm -f
+				if [[ -n $(docker ps -aq --filter ancestor=nodemain:v1.0) ]]; then
+					docker ps -aq --filter ancestor=nodemain:v1.0 | xargs docker rm -f
+				fi
 				docker run -d -p 3000:3000 --expose 3000 nodemain:v1.0
 			'''
 		}
@@ -49,7 +51,9 @@ pipeline {
     		}
     		steps {
 	  		sh '''
-				docker ps -aq --filter ancestor=nodedev:v1.0 | xargs docker rm -f
+				if [[ -n $(docker ps -aq --filter ancestor=nodedev:v1.0) ]]; then
+					docker ps -aq --filter ancestor=nodedev:v1.0 | xargs docker rm -f
+				fi
 				docker run -d --expose 3001 -p 3001:3000 nodedev:v1.0'
 			'''
 		}
