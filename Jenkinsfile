@@ -1,20 +1,12 @@
 //BRANCH PIPELINE
 
 pipeline {
-  agent { label 'ubuntu' }
+  agent { label 'ubuntu-runner' }
   options {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')
     disableConcurrentBuilds()
   }
-/*
-   environment { 
 
-        registryCredential  = 'dockerhub_mikedzn' 
-        dockerImage         = '' 
-        dockerImage_l       = ''
-        registryName        = "mikedzn/epam_${env.BRANCH_NAME}"
-   }
-*/
   tools {
 	nodejs 'node'
   }
@@ -31,7 +23,7 @@ pipeline {
         		sh'npm test'
       		}
     	}
-    	
+/*    	
 	stage('Install Docker') {
       		steps {
 			echo " "
@@ -46,6 +38,7 @@ pipeline {
         '''
       		}
     	}
+*/
     	stage('Build Docker image') {
     		steps {
 	  	sh '''
